@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Management Web App README</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        h2 {
+            color: #FF5722;
+        }
+        h3 {
+            color: #03A9F4;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .highlight {
+            color: #FFC107;
+        }
+        ul {
+            list-style-type: square;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🏋️ Gym Management Web App</h1>
+
+    <p>Welcome to the <strong>Gym Management Web App</strong>! This web application helps gym administrators manage members, schedules, payments, and more, with a sleek and user-friendly interface.</p>
+
+    <h2>🌟 Features</h2>
+    <ul>
+        <li><strong>Member Registration &amp; Management</strong>: Track members, their subscription plans, and personal details.</li>
+        <li><strong>Admin Panel</strong>: Manage the entire gym ecosystem with a central admin dashboard.</li>
+        <li><strong>Supplements</strong>: Manage the supplements available.</li>
+    </ul>
+
+    <h2>🛠️ Tech Stack</h2>
+    <ul>
+        <li><strong>Frontend</strong>: HTML5, CSS3, JavaScript</li>
+        <li><strong>Backend</strong>: Node.js, Express.js</li>
+        <li><strong>Database</strong>: MySQL</li>
+        <li><strong>Tools &amp; Libraries</strong>:
+            <ul>
+                <li><code>bcrypt.js</code> for password encryption</li>
+                <li><code>nodemailer</code> for sending emails</li>
+                <li><code>sequelize</code> ORM for database operations</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>🚀 Installation</h2>
+    <ol>
+        <li>Clone the repository:
+            <pre><code>git clone https://github.com/asta-maxx/gym-management.git</code></pre>
+        </li>
+        <li>Install the dependencies:
+            <pre><code>cd gym-management
+npm install</code></pre>
+        </li>
+        <li>Set up the MySQL database:
+            <ul>
+                <li>Create a new MySQL database.</li>
+                <li>Import the SQL schema (using the provided <code>/gym.sql</code> file).</li>
+            </ul>
+        </li>
+        <li>Configure environment variables:
+            <ul>
+                <li>Create a <code>.env</code> file in the root directory.</li>
+                <li>Add the following environment variables:
+                    <pre><code>DB_HOST=your_database_host
+DB_USER=your_database_username
+DB_PASSWORD=your_database_password
+DB_NAME=your_database_name
+PORT=4000</code></pre>
+                </li>
+            </ul>
+        </li>
+        <li>Start the app:
+            <pre><code>npm start</code></pre>
+        </li>
+        <li>Open your browser and visit: <code>http://localhost:4000</code></li>
+    </ol>
+
+    <h2>📂 Folder Structure</h2>
+    <pre><code>├── public              # Static files (HTML, JS, images)
+   ├── styles          # CSS
+   ├── routes              # Application routes
+   └── server.js           # Main entry point of the application</code></pre>
+
+    <h2>👩‍💻 Usage</h2>
+    <ul>
+        <li><strong>Admin</strong> can:
+            <ul>
+                <li>Register new members.</li>
+                <li>Add Supplements.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>📝 License</h2>
+    <p>This project is licensed under the <strong>MIT License</strong> - see the <a href="LICENSE">LICENSE</a> file for details.</p>
+
+</body>
+</html>
