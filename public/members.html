@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members</title>
+    <link rel="stylesheet" href="members.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Gym Management</div>
+        <ul class="nav-links">
+            <li><a href="supplements.html">Supplements</a></li>
+            <li><button id="sign-out" class="sign-out-btn">Sign Out</button></li>
+        </ul>
+    </nav>    
+    
+
+    <h2>Add Member</h2>
+    <form id="add-member-form">
+        <input type="text" name="first_name" placeholder="First Name" required>
+        <input type="text" name="last_name" placeholder="Last Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="phone" placeholder="Phone" required>
+        <input type="text" name="emergency_contact" placeholder="Emergency Contact" required>
+        <textarea name="health_conditions" placeholder="Health Conditions"></textarea>
+        <textarea name="fitness_goals" placeholder="Fitness Goals"></textarea>
+        <select name="membership_type" required>
+            <option value="Monthly">Monthly</option>
+            <option value="Quarterly">Quarterly</option>
+            <option value="Yearly">Yearly</option>
+        </select>
+        <input type="date" name="start_date" required>
+        <button type="submit">Add Member</button>
+    </form>
+
+    <h1>Members List</h1>
+    <table id="members-table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Emergency Contact</th>
+                <th>Health Conditions</th>
+                <th>Fitness Goals</th>
+                <th>Membership Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Member data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Authentication check: redirect to login page if not authenticated
+        window.onload = function() {
+            const token = localStorage.getItem('authToken'); // Or use sessionStorage
+            if (!token) {
+                window.location.href = '/login.html'; // Redirect to login page if not authenticated
+            }
+        }
+
+        // Sign out functionality
+        document.getElementById('sign-out').addEventListener('click', function() {
+            localStorage.removeItem('authToken'); // Remove token from localStorage
+            alert('Signed out!');
+            window.location.href = '/login.html'; // Redirect to login page
+        });
+
+        // Fetch and display members
+        fetch('/members', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Include token in request
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                // Token invalid or expired, redirect to login
+                window.location.href = '/login.html';
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.getElementById('members-table').querySelector('tbody');
+            data.forEach(member => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${member.first_name}</td>
+                    <td>${member.last_name}</td>
+                    <td>${member.email}</td>
+                    <td>${member.phone}</td>
+                    <td>${member.emergency_contact}</td>
+                    <td>${member.health_conditions}</td>
+                    <td>${member.fitness_goals}</td>
+                    <td>${member.membership_type}</td>
+                    <td>${new Date(member.start_date).toLocaleDateString()}</td>
+                    <td>${new Date(member.end_date).toLocaleDateString()}</td>
+                    <td>
+                        <button onclick="deleteMember(${member.id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+
+        // Add member
+        document.getElementById('add-member-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+
+            fetch('/members/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Include token in request
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                if (response.ok) {
+                    location.reload(); // Reload the page to see the updated list
+                } else {
+                    alert('Failed to add member.');
+                }
+            });
+        });
+
+        // Function to delete member
+        function deleteMember(id) {
+            fetch(`/members/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Include token in request
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload(); // Reload the page to see the updated list
+                } else {
+                    alert('Failed to delete member.');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

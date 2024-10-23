@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <title>Login</title>
+</head>
+<body>
+<!-- Video Background Container -->
+    <div class="video-container">
+        <video autoplay muted loop id="background-video">
+            <source src="bg.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Login Form Container -->
+    <div class="form-container blur">
+        <div class="form-box">
+            <h1>Sign In</h1>
+            <form id="loginForm">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <div align="center">
+                    <button class="uiverse" type="submit">
+                        <div class="wrapper">
+                            <span>Sign in</span>
+                            <div class="circle circle-12"></div>
+                            <div class="circle circle-11"></div>
+                            <div class="circle circle-10"></div>
+                            <div class="circle circle-9"></div>
+                            <div class="circle circle-8"></div>
+                            <div class="circle circle-7"></div>
+                            <div class="circle circle-6"></div>
+                            <div class="circle circle-5"></div>
+                            <div class="circle circle-4"></div>
+                            <div class="circle circle-3"></div>
+                            <div class="circle circle-2"></div>
+                            <div class="circle circle-1"></div>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript to Handle Login -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const loginData = {};
+            formData.forEach((value, key) => loginData[key] = value);
+
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData),
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Store token or user session (adjust as necessary)
+                    localStorage.setItem('authToken', 'your-token-here'); // Replace with actual token from the response
+                    window.location.href = '/members.html'; // Redirect to members page on success
+                } else {
+                    alert('Invalid credentials');
+                }
+            })
+            .catch(err => console.error('Error:', err));
+        });
+
+        // Sign out functionality (if applicable)
+        document.getElementById('sign-out').addEventListener('click', function() {
+            // Implement your sign-out logic here
+            // For example, you might clear session data
+            alert('Signed out! Redirecting to login page...');
+            localStorage.removeItem('authToken'); // Clear token or session
+            window.location.href = 'login.html'; // Redirect to login page
+        });
+    </script>
+</body>
+</html>
