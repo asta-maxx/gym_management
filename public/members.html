@@ -15,7 +15,6 @@
             <li><button id="sign-out" class="sign-out-btn">Sign Out</button></li>
         </ul>
     </nav>    
-    
 
     <h2>Add Member</h2>
     <form id="add-member-form">
@@ -30,6 +29,10 @@
             <option value="Monthly">Monthly</option>
             <option value="Quarterly">Quarterly</option>
             <option value="Yearly">Yearly</option>
+        </select>
+        <select name="supplement_id" id="supplement-dropdown" required>
+            <option value="" disabled selected>Select Supplement</option>
+            <!-- Supplements will be populated here -->
         </select>
         <input type="date" name="start_date" required>
         <button type="submit">Add Member</button>
@@ -47,6 +50,7 @@
                 <th>Health Conditions</th>
                 <th>Fitness Goals</th>
                 <th>Membership Type</th>
+                <th>Supplement</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Actions</th>
@@ -64,6 +68,7 @@
             if (!token) {
                 window.location.href = '/login.html'; // Redirect to login page if not authenticated
             }
+            fetchSupplements(); // Fetch supplements when the page loads
         }
 
         // Sign out functionality
@@ -72,6 +77,25 @@
             alert('Signed out!');
             window.location.href = '/login.html'; // Redirect to login page
         });
+
+        // Fetch supplements and populate the dropdown
+        function fetchSupplements() {
+            fetch('/supplements', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Include token in request
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const dropdown = document.getElementById('supplement-dropdown');
+                data.forEach(supplement => {
+                    const option = document.createElement('option');
+                    option.value = supplement.id; // Assuming each supplement has an 'id'
+                    option.textContent = supplement.name; // Assuming each supplement has a 'name'
+                    dropdown.appendChild(option);
+                });
+            });
+        }
 
         // Fetch and display members
         fetch('/members', {
@@ -99,6 +123,7 @@
                     <td>${member.health_conditions}</td>
                     <td>${member.fitness_goals}</td>
                     <td>${member.membership_type}</td>
+                    <td>${member.supplement_name || 'N/A'}</td> <!-- Display supplement name if available -->
                     <td>${new Date(member.start_date).toLocaleDateString()}</td>
                     <td>${new Date(member.end_date).toLocaleDateString()}</td>
                     <td>

@@ -6,11 +6,11 @@ module.exports = (db) => {
 
     // Register member
     router.post('/register', (req, res) => {
-        const { first_name, last_name, email, phone, emergency_contact, health_conditions, fitness_goals, membership_type, start_date } = req.body;
+        const { first_name, last_name, email, phone, emergency_contact, health_conditions, fitness_goals, membership_type, start_date, supplement_id } = req.body;
 
-        const query = `INSERT INTO members (first_name, last_name, email, phone, emergency_contact, health_conditions, fitness_goals, membership_type, start_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const query = `INSERT INTO members (first_name, last_name, email, phone, emergency_contact, health_conditions, fitness_goals, membership_type, start_date, supplement_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         
-        db.query(query, [first_name, last_name, email, phone, emergency_contact, health_conditions, fitness_goals, membership_type, start_date], (err, result) => {
+        db.query(query, [first_name, last_name, email, phone, emergency_contact, health_conditions, fitness_goals, membership_type, start_date, supplement_id], (err, result) => {
             if (err) {
                 console.error('Error adding member:', err);
                 return res.status(500).send('Error adding member');
@@ -22,14 +22,15 @@ module.exports = (db) => {
     // Get all members with end date
     router.get('/', (req, res) => {
         const query = `
-            SELECT *, 
+            SELECT m.*, s.name AS supplement_name, 
             CASE 
                 WHEN membership_type = 'Yearly' THEN DATE_ADD(start_date, INTERVAL 1 YEAR)
                 WHEN membership_type = 'Quarterly' THEN DATE_ADD(start_date, INTERVAL 3 MONTH)
                 WHEN membership_type = 'Monthly' THEN DATE_ADD(start_date, INTERVAL 1 MONTH)
                 ELSE NULL
             END AS end_date 
-            FROM members
+            FROM members m
+            LEFT JOIN supplements s ON m.supplement_id = s.id
         `;
         
         db.query(query, (err, results) => {
