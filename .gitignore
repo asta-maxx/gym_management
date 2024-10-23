@@ -1,4 +1,4 @@
 node_modules/*
 Archive.zaip
-.env
-.DS_Store
+./env
+./DS_Store
